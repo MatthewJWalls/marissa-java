@@ -10,10 +10,10 @@ object Main extends App {
   // connection details
 
   val details = new ConnectionDetails(
-    user = "marissabot",
-    pass = "pass",
-    nick = "nick",
-    rooms = List("room")
+    user = "test",
+    pass = "test",
+    nick = "test",
+    rooms = List("test")
   )
 
   // create the bot
@@ -22,8 +22,23 @@ object Main extends App {
 
   // attach some example handlers
 
-  bot.handler((tx, rx) => println("Saw a message: " + rx.take().body) )
-  bot.handler((tx, rx) => println("Saw a message: " + rx.take().body) )
+  bot.handler((tx, rx) => {
+    while(true) {
+      val msg = rx.take()
+      if(msg.body.toLowerCase contains "are you alive") {
+        tx.add(ChatMessage(msg.from, "Alive on hook 1"))
+      }
+    }
+  })
+
+  bot.handler((tx, rx) => {
+    while(true) {
+      val msg = rx.take()
+      if(msg.body.toLowerCase contains "are you alive") {
+        tx.add(ChatMessage(msg.from, "alive on hook 2"))
+      }
+    }
+  })
 
   // start (this will block)
 

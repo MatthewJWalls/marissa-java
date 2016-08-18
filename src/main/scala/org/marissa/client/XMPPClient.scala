@@ -36,8 +36,6 @@ class XMPPClient(val connectionDetails: ConnectionDetails, val rxChannel: Blocki
   object listener extends MessageListener {
     override def handleMessage(e: MessageEvent): Unit = {
 
-      println("handling message")
-
       val sender = e.getMessage.getFrom.getResource
       val isMe = sender == connectionDetails.nick
       val msg = ChatMessage(e.getMessage.getFrom.getLocal, e.getMessage.getBody)
@@ -53,8 +51,6 @@ class XMPPClient(val connectionDetails: ConnectionDetails, val rxChannel: Blocki
     * Attempts to gracefully disconnect from the XMPP Session
     */
   def die(reason: Throwable) {
-
-    println("XMPPClient has died", reason)
 
     Try {
 
@@ -81,13 +77,11 @@ class XMPPClient(val connectionDetails: ConnectionDetails, val rxChannel: Blocki
     val chatService = m.createChatService(Jid.valueOf("conf.hipchat.com"))
 
     // leave any rooms we're already in
-    println("leaving rooms")
 
     joinedRooms.foreach{ case (key, value) => leaveRoom(value) }
 
     // ok now join the new rooms
 
-    println("joining rooms")
     joinRooms.foreach(room => joinRoom(chatService, room))
 
   }
@@ -134,8 +128,6 @@ class XMPPClient(val connectionDetails: ConnectionDetails, val rxChannel: Blocki
     xmppSession.login(connectionDetails.user, connectionDetails.pass)
     xmppSession.send(new Presence())
 
-    println("connected")
-
     // join the rooms
 
     joinRooms(connectionDetails.rooms)
@@ -167,8 +159,6 @@ class XMPPClient(val connectionDetails: ConnectionDetails, val rxChannel: Blocki
     * Runs a thread that waits for messages on the txChannel and sends them to the remote xmpp service.
     */
   def selectMessageLoop() {
-
-    println("Entering blocking loop")
 
     while(true) {
 
